@@ -7,6 +7,8 @@ import Profile from './components/Profile'
 import OverallDeals from './Pages/OverallDeals'
 import LastTransactions from './Pages/LastTransactions'
 import TeamsPage from './Pages/Teams'
+import AgentRanking from './Pages/AgentRanking'
+import MainPage from './Pages/MainPage'
 import './App.css'
 
 import { ThemeProvider } from './context/ThemeContext'
@@ -36,6 +38,8 @@ function App() {
                 <Route path="/deals" element={<OverallDeals />} />
                 <Route path="/transactions" element={<LastTransactions />} />
                 <Route path="/team" element={<TeamsPage />} />
+                <Route path="/ranking" element={<AgentRanking />} />
+                <Route path="/*" element={<MainPage />} />
                 
               </Routes>
             {/* Your page content goes here */}

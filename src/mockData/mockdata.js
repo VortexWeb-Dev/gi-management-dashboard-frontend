@@ -461,3 +461,266 @@ export const overallDeals = [
     }
   ];
   
+  export const agentRankingData = {
+    2024: {
+      January: [
+        { name: "Alice Johnson", grossCommission: 15000, rank: 1 },
+        { name: "Bob Smith", grossCommission: 12500, rank: 2 },
+        { name: "Charlie Davis", grossCommission: 9800, rank: 3 },
+        { name: "Diana Lee", grossCommission: 8700, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7200, rank: 5 }
+      ],
+      February: [
+        { name: "Alice Johnson", grossCommission: 14200, rank: 1 },
+        { name: "Charlie Davis", grossCommission: 13800, rank: 2 },
+        { name: "Bob Smith", grossCommission: 13000, rank: 3 },
+        { name: "Diana Lee", grossCommission: 8800, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 6500, rank: 5 }
+      ],
+      March: [
+        { name: "Charlie Davis", grossCommission: 15800, rank: 1 },
+        { name: "Alice Johnson", grossCommission: 14900, rank: 2 },
+        { name: "Bob Smith", grossCommission: 12600, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9700, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 6900, rank: 5 }
+      ],
+      April: [
+        { name: "Alice Johnson", grossCommission: 16000, rank: 1 },
+        { name: "Charlie Davis", grossCommission: 15000, rank: 2 },
+        { name: "Bob Smith", grossCommission: 13200, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9200, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7400, rank: 5 }
+      ],
+      May: [
+        { name: "Charlie Davis", grossCommission: 16200, rank: 1 },
+        { name: "Alice Johnson", grossCommission: 15700, rank: 2 },
+        { name: "Bob Smith", grossCommission: 12800, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9100, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7000, rank: 5 }
+      ],
+      June: [
+        { name: "Alice Johnson", grossCommission: 16800, rank: 1 },
+        { name: "Charlie Davis", grossCommission: 16100, rank: 2 },
+        { name: "Bob Smith", grossCommission: 12900, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9500, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7200, rank: 5 }
+      ],
+      July: [
+        { name: "Charlie Davis", grossCommission: 17000, rank: 1 },
+        { name: "Alice Johnson", grossCommission: 16900, rank: 2 },
+        { name: "Bob Smith", grossCommission: 13400, rank: 3 },
+        { name: "Diana Lee", grossCommission: 8800, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7500, rank: 5 }
+      ],
+      August: [
+        { name: "Alice Johnson", grossCommission: 17500, rank: 1 },
+        { name: "Charlie Davis", grossCommission: 16900, rank: 2 },
+        { name: "Bob Smith", grossCommission: 13200, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9200, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7000, rank: 5 }
+      ],
+      September: [
+        { name: "Charlie Davis", grossCommission: 18000, rank: 1 },
+        { name: "Alice Johnson", grossCommission: 17800, rank: 2 },
+        { name: "Bob Smith", grossCommission: 13700, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9000, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7600, rank: 5 }
+      ],
+      October: [
+        { name: "Alice Johnson", grossCommission: 18100, rank: 1 },
+        { name: "Charlie Davis", grossCommission: 17500, rank: 2 },
+        { name: "Bob Smith", grossCommission: 13900, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9100, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7800, rank: 5 }
+      ],
+      November: [
+        { name: "Charlie Davis", grossCommission: 18500, rank: 1 },
+        { name: "Alice Johnson", grossCommission: 17900, rank: 2 },
+        { name: "Bob Smith", grossCommission: 14000, rank: 3 },
+        { name: "Diana Lee", grossCommission: 8900, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7700, rank: 5 }
+      ],
+      December: [
+        { name: "Alice Johnson", grossCommission: 19000, rank: 1 },
+        { name: "Charlie Davis", grossCommission: 18200, rank: 2 },
+        { name: "Bob Smith", grossCommission: 14300, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9200, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7600, rank: 5 }
+      ]
+    },
+    2025: {
+      January: [
+        { name: "Charlie Davis", grossCommission: 19200, rank: 1 },
+        { name: "Alice Johnson", grossCommission: 18800, rank: 2 },
+        { name: "Bob Smith", grossCommission: 14500, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9400, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7700, rank: 5 }
+      ],
+      February: [
+        { name: "Alice Johnson", grossCommission: 19400, rank: 1 },
+        { name: "Charlie Davis", grossCommission: 19000, rank: 2 },
+        { name: "Bob Smith", grossCommission: 14700, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9300, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 7800, rank: 5 }
+      ],
+      March: [
+        { name: "Charlie Davis", grossCommission: 19800, rank: 1 },
+        { name: "Alice Johnson", grossCommission: 19300, rank: 2 },
+        { name: "Bob Smith", grossCommission: 15000, rank: 3 },
+        { name: "Diana Lee", grossCommission: 9500, rank: 4 },
+        { name: "Ethan Clark", grossCommission: 8000, rank: 5 }
+      ]
+    }
+  };
+  
+  export const developerData = {
+    "2024": {
+      "January": {
+        closedDeals: 12,
+        propertyPrice: 15000000,
+        grossCommission: 750000,
+        netCommission: 600000,
+        totalPaymentReceived: 550000,
+        amountReceivable: 50000,
+        developerName: "Heart of Europe"
+      },
+      "February": {
+        closedDeals: 10,
+        propertyPrice: 12500000,
+        grossCommission: 625000,
+        netCommission: 500000,
+        totalPaymentReceived: 450000,
+        amountReceivable: 50000,
+        developerName: "Danube"
+      },
+      "March": {
+        closedDeals: 15,
+        propertyPrice: 18000000,
+        grossCommission: 900000,
+        netCommission: 720000,
+        totalPaymentReceived: 700000,
+        amountReceivable: 20000,
+        developerName: "Azizi"
+      },
+      "April": {
+        closedDeals: 18,
+        propertyPrice: 21000000,
+        grossCommission: 1050000,
+        netCommission: 840000,
+        totalPaymentReceived: 800000,
+        amountReceivable: 40000,
+        developerName: "Aldar"
+      },
+      "May": {
+        closedDeals: 14,
+        propertyPrice: 16000000,
+        grossCommission: 800000,
+        netCommission: 640000,
+        totalPaymentReceived: 600000,
+        amountReceivable: 40000,
+        developerName: "Devmark"
+      },
+      "June": {
+        closedDeals: 16,
+        propertyPrice: 17500000,
+        grossCommission: 875000,
+        netCommission: 700000,
+        totalPaymentReceived: 650000,
+        amountReceivable: 50000,
+        developerName: "Arada"
+      },
+      "July": {
+        closedDeals: 13,
+        propertyPrice: 14500000,
+        grossCommission: 725000,
+        netCommission: 580000,
+        totalPaymentReceived: 540000,
+        amountReceivable: 40000,
+        developerName: "Secondary"
+      },
+      "August": {
+        closedDeals: 17,
+        propertyPrice: 20000000,
+        grossCommission: 1000000,
+        netCommission: 800000,
+        totalPaymentReceived: 760000,
+        amountReceivable: 40000,
+        developerName: "SOL"
+      },
+      "September": {
+        closedDeals: 19,
+        propertyPrice: 22000000,
+        grossCommission: 1100000,
+        netCommission: 880000,
+        totalPaymentReceived: 830000,
+        amountReceivable: 50000,
+        developerName: "Heart of Europe"
+      },
+      "October": {
+        closedDeals: 21,
+        propertyPrice: 25000000,
+        grossCommission: 1250000,
+        netCommission: 1000000,
+        totalPaymentReceived: 950000,
+        amountReceivable: 50000,
+        developerName: "Danube"
+      },
+      "November": {
+        closedDeals: 20,
+        propertyPrice: 24000000,
+        grossCommission: 1200000,
+        netCommission: 960000,
+        totalPaymentReceived: 910000,
+        amountReceivable: 50000,
+        developerName: "Azizi"
+      },
+      "December": {
+        closedDeals: 22,
+        propertyPrice: 26000000,
+        grossCommission: 1300000,
+        netCommission: 1040000,
+        totalPaymentReceived: 990000,
+        amountReceivable: 50000,
+        developerName: "Arada"
+      }
+    },
+    "2025": {
+      "January": {
+        closedDeals: 23,
+        propertyPrice: 27000000,
+        grossCommission: 1350000,
+        netCommission: 1080000,
+        totalPaymentReceived: 1000000,
+        amountReceivable: 80000,
+        developerName: "Devmark"
+      },
+      "February": {
+        closedDeals: 21,
+        propertyPrice: 25000000,
+        grossCommission: 1250000,
+        netCommission: 1000000,
+        totalPaymentReceived: 950000,
+        amountReceivable: 50000,
+        developerName: "Aldar"
+      },
+      "March": {
+        closedDeals: 24,
+        propertyPrice: 28000000,
+        grossCommission: 1400000,
+        netCommission: 1120000,
+        totalPaymentReceived: 1060000,
+        amountReceivable: 60000,
+        developerName: "SOL"
+      },
+      "April": {
+        closedDeals: 20,
+        propertyPrice: 23000000,
+        grossCommission: 1150000,
+        netCommission: 920000,
+        totalPaymentReceived: 880000,
+        amountReceivable: 40000,
+        developerName: "Secondary"
+      }
+    }
+  };
+  
