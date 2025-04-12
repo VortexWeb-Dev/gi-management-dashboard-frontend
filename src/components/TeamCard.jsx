@@ -11,9 +11,10 @@ const TeamCard = ({ team }) => {
       if (position === "Agent") return <Medal className="w-5 h-5 text-green-500" />;
       return null;
     };
+
   
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow transition-all duration-300 hover:shadow-xl">
         {/* Team header */}
         <div className="p-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-4">
@@ -37,8 +38,11 @@ const TeamCard = ({ team }) => {
         </div>
         
         {/* Team members */}
-        <div className={`transition-all duration-300 ${expanded ? 'max-h-96' : 'max-h-0'} overflow-hidden`}>
-          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+        {/* <div className={`transition-all duration-300 ${expanded ? 'max-h-96' : 'max-h-0'} overflow-hidden`}>
+          <ul className="divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto"> */}
+          <div className={`transition-all duration-300 ${expanded ? '' : 'max-h-0'} overflow-hidden`}>
+  <ul className="divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto" 
+      style={{ maxHeight: expanded ? '300px' : 0 }}>
             {team.members.map((member, index) => (
               <li key={index} className="px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -61,15 +65,15 @@ const TeamCard = ({ team }) => {
         </div>
         
         {/* Team stats */}
-        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 grid grid-cols-3 gap-4 text-center">
+        <div className=" py-4 bg-gray-50 dark:bg-gray-900 grid grid-cols-2 text-center px-auto">
           <div>
             <p className="text-xs text-gray-500 dark:text-gray-400">Members</p>
             <p className="font-semibold text-gray-900 dark:text-white">{team.members.length}</p>
           </div>
-          <div>
+          {/* <div>
             <p className="text-xs text-gray-500 dark:text-gray-400">Avg Experience</p>
             <p className="font-semibold text-gray-900 dark:text-white">3.5 yrs</p>
-          </div>
+          </div> */}
           <div>
             <p className="text-xs text-gray-500 dark:text-gray-400">Performance</p>
             <p className="font-semibold text-indigo-600 dark:text-indigo-400">High</p>

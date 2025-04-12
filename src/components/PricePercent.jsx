@@ -1,82 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Search } from 'lucide-react';
-import { developerData } from './../mockData/mockdata';
 
-export default function DeveloperPropertyPriceChart() {
+export default function DeveloperPropertyPriceChart({apiData}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [chartData, setChartData] = useState([]);
-  const [filteredData, setFilteredData] = useState(chartData)
-  const [totalPrice, setTotalPrice] = useState(0)
-  // Process the data when component mounts or searchTerm changes
+  const [filteredData, setFilteredData] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
   useEffect(() => {
-    // Extract all months data from 2024 and 2025
-    const allMonthsData = [
-      ...Object.values(developerData['2024']),
-      ...Object.values(developerData['2025'])
-    ];
-    
-    // Calculate total property price
-    const totalPropertyPrice = allMonthsData.reduce(
-      (total, month) => total + month.propertyPrice, 0
-    );
-    setTotalPrice(totalPropertyPrice)
-    
-    // Group by developer and sum property prices
-    const developerSummary = allMonthsData.reduce((acc, month) => {
-      const { developerName, propertyPrice } = month;
-      if (!acc[developerName]) {
-        acc[developerName] = { developerName, propertyPrice: 0 };
-      }
-      acc[developerName].propertyPrice += propertyPrice;
-      return acc;
-    }, {});
-    
-    // Convert to array and calculate percentages
-    let processedData = Object.values(developerSummary).map(dev => ({
-      name: dev.developerName,
-      value: dev.propertyPrice,
-      percentage: ((dev.propertyPrice / totalPropertyPrice) * 100).toFixed(2)
+    // Simulating fetch – replace with real API call
+    // const apiData = ;
+
+    const total = apiData.reduce((sum, d) => sum + d.property_price, 0);
+    setTotalPrice(total);
+
+    const processed = apiData.map(d => ({
+      name: d.developer,
+      value: d.property_price,
+      percentage: d.percentage
     }));
-    
-    setChartData(processedData);
-    // Apply search filter if any
-    if (searchTerm) {
-      processedData = processedData.filter(item => 
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    setFilteredData(processedData);
-    
+
+    setChartData(processed);
+
+    const filtered = searchTerm
+      ? processed.filter(d =>
+          d.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : processed;
+
+    setFilteredData(filtered);
   }, [searchTerm]);
-  
-  // Colors for the pie chart
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff6b6b'];
-  
-  // Custom tooltip for the pie chart
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
+      const item = payload[0];
       return (
         <div className="bg-white dark:bg-gray-800 p-4 rounded shadow-lg border border-gray-200 dark:border-gray-700">
-          <p className="font-bold text-gray-800 dark:text-gray-200">{payload[0].name}</p>
+          <p className="font-bold text-gray-800 dark:text-gray-200">{item.name}</p>
           <p className="text-gray-600 dark:text-gray-300">
-            AED {new Intl.NumberFormat().format(payload[0].value)}
+            AED {new Intl.NumberFormat().format(item.value)}
           </p>
           <p className="text-blue-600 dark:text-blue-400">
-            {payload[0].payload.percentage}% of total
+            {item.payload.percentage}% of total
           </p>
         </div>
       );
     }
     return null;
   };
-  
+
   return (
     <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg transition-colors duration-200">
       <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
         Developer Property Price Distribution
       </h2>
-      
+
       {/* Search bar */}
       <div className="relative mb-6">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -90,10 +71,9 @@ export default function DeveloperPropertyPriceChart() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      
-      {/* Chart and stats container */}
+
+      {/* Chart and stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Pie Chart */}
         <div className="lg:col-span-2 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow">
           <div className="h-64 md:h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -109,7 +89,7 @@ export default function DeveloperPropertyPriceChart() {
                   nameKey="name"
                   label={({ name, percentage }) => `${name}: ${percentage}%`}
                 >
-                  {chartData.map((entry, index) => (
+                  {filteredData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -120,21 +100,20 @@ export default function DeveloperPropertyPriceChart() {
           </div>
         </div>
 
-        {/* total price card */}
+        {/* Total price card */}
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm px-6 w-full max-w-md mx-auto py-16">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-medium text-gray-800 dark:text-gray-100">
-          Total Property Price
-        </h2>
-        <div className="text-sm text-gray-500 dark:text-gray-400">2024</div>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-medium text-gray-800 dark:text-gray-100">
+              Total Property Price
+            </h2>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{new Date().getFullYear()}</div>
+          </div>
+          <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+            {new Intl.NumberFormat().format(totalPrice)}
+          </div>
+        </div>
       </div>
-      <div className="text-3xl font-bold text-green-600 dark:text-green-400">
-      {new Intl.NumberFormat().format(totalPrice)}
-      </div>
-    </div>
-        
-      </div>
-      
+
       {/* Summary table */}
       <div className="mt-8 overflow-x-auto">
         <table className="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -154,8 +133,8 @@ export default function DeveloperPropertyPriceChart() {
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-800 dark:text-gray-200">
                   <div className="flex items-center">
-                    <span 
-                      className="inline-block w-3 h-3 rounded-full mr-2" 
+                    <span
+                      className="inline-block w-3 h-3 rounded-full mr-2"
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     ></span>
                     {developer.percentage}%

@@ -1,8 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, Filter, X, Check, ArrowUpDown } from 'lucide-react';
-import { overallDeals as transactions } from './../mockData/mockdata';
+import fetchData from '../utils/fetchData';
 
 const TransactionTable = () => {
+  // Data state
+  const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   // Filter states
   const [filters, setFilters] = useState({
     year: [],
@@ -25,24 +30,42 @@ const TransactionTable = () => {
     direction: 'desc'
   });
 
-  // Get unique years from transactions
-  const years = useMemo(() => {
-    const years = [...new Set(transactions.map(t => new Date(t.date).getFullYear()))];
-    return years.sort((a, b) => b - a);
+  // Fetch data from API
+  useEffect(() => {
+    fetchData(import.meta.env.VITE_OVERALL_DEALS, {}, setIsLoading, setError)
+      .then((data)=>{
+        setTransactions(data)
+      })
   }, []);
 
-  // Filter options
-  const filterOptions = {
-    dealType: ["Primary", "Secondary", "offplan"],
-    transactionType: ["Sale", "Rent"],
-    leadSource: ["Portal", "Referral", "Website", "Walk-in", "Social Media", "Event", "Cold Call", "Flyer", "Instagram"],
-    propertyType: ["Villa", "Apartment", "Townhouse", "Penthouse", "Studio", "Duplex", "Loft"]
-  };
+  // Get unique years from transactions
+  const years = useMemo(() => {
+    if (!transactions.length) return [];
+    const years = [...new Set(transactions.map(t => new Date(t.date).getFullYear()))];
+    return years.sort((a, b) => b - a);
+  }, [transactions]);
+
+  // Filter options - derived from API data
+  const filterOptions = useMemo(() => {
+    if (!transactions.length) return {
+      dealType: [],
+      transactionType: [],
+      leadSource: [],
+      propertyType: []
+    };
+    
+    return {
+      dealType: [...new Set(transactions.map(t => t.dealType))],
+      transactionType: [...new Set(transactions.map(t => t.transactionType))],
+      leadSource: [...new Set(transactions.map(t => t.leadSource))],
+      propertyType: [...new Set(transactions.map(t => t.propertyType))]
+    };
+  }, [transactions]);
 
   // Toggle dropdown
   const toggleDropdown = (filter) => {
     setDropdownOpen(prev => ({
-    //   ...prev,
+      ...prev,
       [filter]: !prev[filter]
     }));
   };
@@ -75,6 +98,8 @@ const TransactionTable = () => {
 
   // Apply filters to transactions
   const filteredTransactions = useMemo(() => {
+    if (!transactions.length) return [];
+    
     return transactions.filter(transaction => {
       const year = new Date(transaction.date).getFullYear();
       
@@ -88,6 +113,8 @@ const TransactionTable = () => {
 
   // Sort transactions
   const sortedTransactions = useMemo(() => {
+    if (!filteredTransactions.length) return [];
+    
     const { key, direction } = sortConfig;
     return [...filteredTransactions].sort((a, b) => {
       if (a[key] < b[key]) {
@@ -104,6 +131,18 @@ const TransactionTable = () => {
   const countActiveFilters = (filterType) => {
     return filters[filterType].length;
   };
+
+  
+  if (isLoading) {
+    <div className='text-center text-4xl font-bold text-gray-700 dark:text-gray-200'>
+              Loading....
+            </div>
+  }
+
+  // Handle potential errors
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="w-full p-4 bg-white dark:bg-gray-900 rounded-lg">
@@ -403,10 +442,10 @@ const TransactionTable = () => {
               <th 
                 scope="col" 
                 className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                onClick={() => requestSort('transactionType')}
+                onClick={() => requestSort('developerName')}
               >
                 <div className="flex items-center">
-                  Transaction Type
+                  Developer Name
                   <ArrowUpDown className="ml-1 w-4 h-4" />
                 </div>
               </th>
@@ -427,6 +466,16 @@ const TransactionTable = () => {
               >
                 <div className="flex items-center">
                   Property Type
+                  <ArrowUpDown className="ml-1 w-4 h-4" />
+                </div>
+              </th>
+              <th 
+                scope="col" 
+                className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => requestSort('noOfBr')}
+              >
+                <div className="flex items-center">
+                  No. Of Br
                   <ArrowUpDown className="ml-1 w-4 h-4" />
                 </div>
               </th>
@@ -480,16 +529,63 @@ const TransactionTable = () => {
                   <ArrowUpDown className="ml-1 w-4 h-4" />
                 </div>
               </th>
+
               <th 
                 scope="col" 
                 className="cursor-pointer px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => requestSort('grossCommission')}
               >
                 <div className="flex items-center justify-end">
-                  Commission
+                  Gross Commission
                   <ArrowUpDown className="ml-1 w-4 h-4" />
                 </div>
               </th>
+              
+
+              <th 
+                scope="col" 
+                className="cursor-pointer px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => requestSort('grossCommissionInclVAT')}
+              >
+                <div className="flex items-center justify-end">
+                  Gross Commission Incl. VAT
+                  <ArrowUpDown className="ml-1 w-4 h-4" />
+                </div>
+              </th>
+
+              <th 
+                scope="col" 
+                className="cursor-pointer px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => requestSort('vat')}
+              >
+                <div className="flex items-center justify-end">
+                  VAT
+                  <ArrowUpDown className="ml-1 w-4 h-4" />
+                </div>
+              </th>
+
+              <th 
+                scope="col" 
+                className="cursor-pointer px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => requestSort('agentCommission')}
+              >
+                <div className="flex items-center justify-end">
+                  Agent Commission
+                  <ArrowUpDown className="ml-1 w-4 h-4" />
+                </div>
+              </th>
+
+              <th 
+                scope="col" 
+                className="cursor-pointer px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => requestSort('leadSource')}
+              >
+                <div className="flex items-center justify-end">
+                  Lead Source
+                  <ArrowUpDown className="ml-1 w-4 h-4" />
+                </div>
+              </th>
+
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
@@ -500,13 +596,16 @@ const TransactionTable = () => {
                     {new Date(transaction.date).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                    {transaction.transactionType}
+                    {transaction.developerName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                     {transaction.dealType}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                     {transaction.propertyType}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
+                    {transaction.noOfBr}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                     {transaction.projectName}
@@ -525,6 +624,21 @@ const TransactionTable = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-right">
                     {transaction.grossCommission.toLocaleString('en-US', { style: 'currency', currency: 'AED', maximumFractionDigits: 0 })}
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-right">
+                    {transaction.grossCommissionInclVAT.toLocaleString('en-US', { style: 'currency', currency: 'AED', maximumFractionDigits: 0 })}
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-right">
+                    {transaction.vat.toLocaleString('en-US', { style: 'currency', currency: 'AED', maximumFractionDigits: 0 })}
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-right">
+                    {transaction.agentCommission.toLocaleString('en-US', { style: 'currency', currency: 'AED', maximumFractionDigits: 0 })}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
+                    {transaction.leadSource}
                   </td>
                 </tr>
               ))

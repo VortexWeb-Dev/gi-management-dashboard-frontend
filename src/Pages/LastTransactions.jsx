@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Calendar, ArrowUpDown } from 'lucide-react';
-import { agentLastTransactions } from './../mockData/mockdata';
+import fetchData from '../utils/fetchData';
 
 const AgentTransactionsTable = () => {
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [yearFilter, setYearFilter] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
   // Load data on component mount
   useEffect(() => {
-    setData(agentLastTransactions);
-    setFilteredData(agentLastTransactions);
+    fetchData(import.meta.env.VITE_LAST_TRANSACTIONS)
+      .then((data)=>{
+        console.log(data)
+        setData(data)
+      })
+    // setData(agentLastTransactions);
+    setFilteredData(data);
   }, []);
 
   // Filter data when search term or year filter changes
@@ -45,14 +50,12 @@ const AgentTransactionsTable = () => {
   };
 
   // Function to format date
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-UK', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('en-GB', options); // 'en-GB' gives '11 Jun 2024' format
+  }
+  
   // Get unique years for filter dropdown
   const getYearOptions = () => {
     const years = new Set();
@@ -223,17 +226,20 @@ const AgentTransactionsTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            {filteredData.length > 0 ? (
+            {
+            filteredData!=null ?
+            (filteredData.length > 0 ? (
               filteredData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                     {item.agent}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    {formatDate(item.joiningDate)}
+
+                    {item.joiningDate? formatDate(item.joiningDate): "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    {formatDate(item.lastDealDate)}
+                    {item.joiningDate? formatDate(item.lastDealDate) : "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     {item.project}
@@ -263,14 +269,25 @@ const AgentTransactionsTable = () => {
                   No matching records found
                 </td>
               </tr>
-            )}
+            )
+            )
+            :
+            <div className='text-center text-4xl font-bold text-gray-700 dark:text-gray-200'>
+              Loading....
+            </div>
+            }
           </tbody>
         </table>
       </div>
       
       <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        Showing {filteredData.length} of {data.length} records
+        { filteredData != null ?
+        (`Showing ${filteredData.length} of ${data.length} records`)
+        :
+        "No records found"
+        }
       </div>
+      
     </div>
   );
 };

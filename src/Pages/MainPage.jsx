@@ -3,25 +3,38 @@ import { Search, ChevronDown, Filter, Calendar } from "lucide-react";
 import DealTypesChart from "../components/DealTypeStat";
 import DeveloperPropertyPriceChart from "../components/PricePercent";
 import {developerData as mockData} from './../mockData/mockdata'
+import fetchData from "../utils/fetchData";
 
 export default function DeveloperStatsTable() {
-  const [data, setData] = useState({});
-  const [selectedYear, setSelectedYear] = useState("2024");
+  const [data, setData] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear() );
   const [selectedDeveloper, setSelectedDeveloper] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [availableDevelopers, setAvailableDevelopers] = useState([]);
-  const [filteredData, setFilteredData] = useState({});
-  // Simulate data import from '../mockData/mockdata'
+  const [filteredData, setFilteredData] = useState(data);
+  const [totalData, setTotalData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+
   useEffect(() => {
-    
-    setData(mockData);
-    setFilteredData(mockData[selectedYear]);
-    
-    // Extract unique developer names
-    const developers = [...new Set(Object.values(mockData[selectedYear]).map(month => month.developerName))];
-    setAvailableDevelopers(["All", ...developers]);
+    fetchData("https://ec2-gicrm.ae/management-dashboard-backend/?endpoint=dashboard", {}, setLoading, setError)
+      .then((apiData) => {
+        if (apiData && apiData.developer_stats) {
+          setTotalData(apiData)
+          setData(apiData.developer_stats)
+          console.log(apiData.developer_stats)
+          
+          // Extract unique developer names
+          const developers = [...new Set(apiData.developer_stats.map(item => item.developer))];
+          setAvailableDevelopers(["All", ...developers]);  
+        }
+
+       
+      });
   }, []);
 
   // Format currency with commas
@@ -29,19 +42,31 @@ export default function DeveloperStatsTable() {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  // Filter data based on selected developer
+  // useEffect(() => {
+  //   if (selectedDeveloper === "All") {
+  //     setFilteredData(data);
+  //     console.log(data);
+      
+  //   } else {
+  //     const filtered = data.filter(item => item.developer === selectedDeveloper);
+  //     setFilteredData(filtered);
+  //     console.log("data:",data);
+  //     console.log("filtered:",JSON.parse(filtered));
+      
+  //   }
+  // }, [selectedDeveloper, data]);
   useEffect(() => {
+    // Only run when real data has been fetched
+    if (!Array.isArray(data) || data.length === 0) return;
+  
     if (selectedDeveloper === "All") {
-      setFilteredData(data[selectedYear]);
+      setFilteredData(data);
     } else {
-      const filtered = {};
-      Object.entries(data[selectedYear] || {}).forEach(([month, monthData]) => {
-        if (monthData.developerName === selectedDeveloper) {
-          filtered[month] = monthData;
-        }
-      });
+      const filtered = data.filter(item => item.developer === selectedDeveloper);
       setFilteredData(filtered);
     }
-  }, [selectedDeveloper, selectedYear, data]);
+  }, [selectedDeveloper, data]);
 
   const filteredDevelopers = availableDevelopers.filter(dev => 
     dev.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,28 +81,45 @@ export default function DeveloperStatsTable() {
       totalPaymentReceived: 0,
       amountReceivable: 0
     };
-
-    Object.values(filteredData || {}).forEach(monthData => {
-      totals.closedDeals += monthData.closedDeals;
-      totals.propertyPrice += monthData.propertyPrice;
-      totals.grossCommission += monthData.grossCommission;
-      totals.netCommission += monthData.netCommission;
-      totals.totalPaymentReceived += monthData.totalPaymentReceived;
-      totals.amountReceivable += monthData.amountReceivable;
-    });
-
+  
+    // Check if filteredData exists and is an array before iterating
+    if (Array.isArray(filteredData) && filteredData.length > 0) {
+      filteredData.forEach(item => {
+        totals.closedDeals += item.closed_deals || 0;
+        totals.propertyPrice += item.property_price || 0;
+        totals.grossCommission += item.total_commission || 0;
+        totals.netCommission += item.agent_commission || 0;
+        // These fields don't exist in new data structure, setting to 0
+        totals.totalPaymentReceived += 0;
+        totals.amountReceivable += 0;
+      });
+    }
+  
     return totals;
   };
 
   const totals = calculateTotals();
 
+  if (loading || data.length <1 || filteredData.length == 0) {
+    
+    return (
+      <div className="text-4xl text-gray-600 py-8">
+        Loading...
+      </div>
+    );
+  }else{
+    
+    console.log(data);
+    console.log(filteredData);
+
+ 
   return (
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Developer Stats {selectedYear}</h2>
         
         <div className="flex space-x-4">
-          {/* Year Selector */}
+          {/* Year Selector - Kept for future use but not functional */}
           <div className="relative">
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -90,18 +132,15 @@ export default function DeveloperStatsTable() {
             
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 border border-gray-200 dark:border-gray-700">
-                {Object.keys(data).map(year => (
-                  <button
-                    key={year}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => {
-                      setSelectedYear(year);
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    {year}
-                  </button>
-                ))}
+                <button
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  onClick={() => {
+                    setSelectedYear(new Date().getFullYear());
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  {new Date().getFullYear()}
+                </button>
               </div>
             )}
           </div>
@@ -163,38 +202,45 @@ export default function DeveloperStatsTable() {
               <th className="px-6 py-3 text-right">Closed Deals</th>
               <th className="px-6 py-3 text-right">Property Price</th>
               <th className="px-6 py-3 text-right">Gross Commission</th>
-              <th className="px-6 py-3 text-right">Net Commission</th>
-              <th className="px-6 py-3 text-right">Payment Received</th>
-              <th className="px-6 py-3 text-right">Receivable</th>
+              <th className="px-6 py-3 text-right">Net Commission</th>  {/* Agent Commission*/}
+              <th className="px-6 py-3 text-right">Payment Received</th> {/* 0 for now*/}
+              <th className="px-6 py-3 text-right">Receivable</th> {/* 0 for now */}
             </tr>
           </thead>
           <tbody>
-            {Object.entries(filteredData || {}).map(([month, monthData]) => (
-              <tr key={month} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                <td className="px-6 py-4 font-medium">{month}</td>
-                <td className="px-6 py-4">{monthData.developerName}</td>
-                <td className="px-6 py-4 text-right">{monthData.closedDeals}</td>
-                <td className="px-6 py-4 text-right">AED {formatCurrency(monthData.propertyPrice)}</td>
-                <td className="px-6 py-4 text-right">AED {formatCurrency(monthData.grossCommission)}</td>
-                <td className="px-6 py-4 text-right">AED {formatCurrency(monthData.netCommission)}</td>
-                <td className="px-6 py-4 text-right">AED {formatCurrency(monthData.totalPaymentReceived)}</td>
-                <td className="px-6 py-4 text-right">AED {formatCurrency(monthData.amountReceivable)}</td>
+            {filteredData 
+            && 
+            filteredData.map((item, index) => (
+              <tr key={index} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <td className="px-6 py-4 font-medium">{item.month}</td>
+                <td className="px-6 py-4">{item.developer}</td>
+                <td className="px-6 py-4 text-right">{item.closed_deals}</td>
+                <td className="px-6 py-4 text-right">AED {formatCurrency(item.property_price.toFixed(2))}</td>
+                <td className="px-6 py-4 text-right">AED {formatCurrency(item.total_commission.toFixed(2))}</td>
+                <td className="px-6 py-4 text-right">AED {formatCurrency(item.agent_commission.toFixed(2))}</td>
+                <td className="px-6 py-4 text-right">AED 0</td>
+                <td className="px-6 py-4 text-right">AED 0</td>
               </tr>
-            ))}
+
+            ))
+            }
             <tr className="bg-gray-100 dark:bg-gray-800 font-semibold">
-              <td className="px-6 py-4" colSpan="2">Total</td>
+            <td className="px-6 py-4" colSpan="2">Total</td>
               <td className="px-6 py-4 text-right">{totals.closedDeals}</td>
-              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.propertyPrice)}</td>
-              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.grossCommission)}</td>
-              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.netCommission)}</td>
-              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.totalPaymentReceived)}</td>
-              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.amountReceivable)}</td>
+              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.propertyPrice.toFixed(2))}</td>
+              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.grossCommission.toFixed(2))}</td>
+              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.netCommission.toFixed(2))}</td>
+              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.totalPaymentReceived.toFixed(2))}</td>
+              <td className="px-6 py-4 text-right">AED {formatCurrency(totals.amountReceivable.toFixed(2))}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <DealTypesChart/>
-      <DeveloperPropertyPriceChart/>
+      <DealTypesChart apiData={totalData.deal_type_distribution}/>
+      <DeveloperPropertyPriceChart apiData={totalData.developer_property_price_distribution}/>
     </div>
+  
   );
+}
+
 }

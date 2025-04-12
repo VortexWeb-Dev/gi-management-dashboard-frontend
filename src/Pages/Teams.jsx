@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { salesTeams } from "../mockData/mockdata";
 import TeamCard from "../components/TeamCard";
 import { Search } from "lucide-react";
+import fetchData from "../utils/fetchData";
 
 const TeamsPage = () => {
   const [view, setView] = useState("grid"); // 'grid' or 'list'
@@ -10,26 +10,26 @@ const TeamsPage = () => {
   const [filteredTeams, setFilteredTeams] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Load data on component mount
-  useEffect(() => {
-    setTeams(salesTeams);
-    setFilteredTeams(salesTeams);
-  }, []);
+ 
 
   // Filter data when search term or year filter changes
   useEffect(() => {
-    let results = teams;
+    fetchData(import.meta.env.VITE_SALES_TEAMS)
+    .then((results)=>{
 
-    if (searchTerm) {
-      results = results.filter(
-        (team) =>
-          team.members.some((member) =>
-            member.name.toLowerCase().includes(searchTerm.toLowerCase())
-          ) || team.teamName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
 
-    setFilteredTeams(results);
+      if (searchTerm) {
+        results = results.filter(
+          (team) =>
+            team.members.some((member) =>
+              member.name.toLowerCase().includes(searchTerm.toLowerCase())
+            ) || team.teamName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+  
+      setFilteredTeams(results);
+    })
+
   }, [searchTerm, teams]);
 
   return (

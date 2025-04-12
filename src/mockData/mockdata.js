@@ -363,7 +363,37 @@ export const overallDeals = [
         { name: "Ali Hassan", position: "Senior Agent" },
         { name: "Rana Kapoor", position: "Agent" },
         { name: "Meenal Rao", position: "Junior Agent" },
-        { name: "Usman Sheikh", position: "Trainee" }
+        { name: "Usman Sheikh", position: "Trainee" },
+        { name: "Sarah Ali", position: null }, // Head
+        { name: "Ali Hassan", position: "Senior Agent" },
+        { name: "Rana Kapoor", position: "Agent" },
+        { name: "Meenal Rao", position: "Junior Agent" },
+        { name: "Usman Sheikh", position: "Trainee" },
+        { name: "Sarah Ali", position: null }, // Head
+        { name: "Ali Hassan", position: "Senior Agent" },
+        { name: "Rana Kapoor", position: "Agent" },
+        { name: "Meenal Rao", position: "Junior Agent" },
+        { name: "Usman Sheikh", position: "Trainee" },
+        { name: "Sarah Ali", position: null }, // Head
+        { name: "Ali Hassan", position: "Senior Agent" },
+        { name: "Rana Kapoor", position: "Agent" },
+        { name: "Meenal Rao", position: "Junior Agent" },
+        { name: "Usman Sheikh", position: "Trainee" },
+        { name: "Sarah Ali", position: null }, // Head
+        { name: "Ali Hassan", position: "Senior Agent" },
+        { name: "Rana Kapoor", position: "Agent" },
+        { name: "Meenal Rao", position: "Junior Agent" },
+        { name: "Usman Sheikh", position: "Trainee" },
+        { name: "Sarah Ali", position: null }, // Head
+        { name: "Ali Hassan", position: "Senior Agent" },
+        { name: "Rana Kapoor", position: "Agent" },
+        { name: "Meenal Rao", position: "Junior Agent" },
+        { name: "Usman Sheikh", position: "Trainee" },
+        { name: "Sarah Ali", position: null }, // Head
+        { name: "Ali Hassan", position: "Senior Agent" },
+        { name: "Rana Kapoor", position: "Agent" },
+        { name: "Meenal Rao", position: "Junior Agent" },
+        { name: "Usman Sheikh", position: "Trainee" },
       ]
     },
     {
