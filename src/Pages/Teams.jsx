@@ -9,12 +9,13 @@ const TeamsPage = () => {
   const [teams, setTeams] = useState([]);
   const [filteredTeams, setFilteredTeams] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
  
 
   // Filter data when search term or year filter changes
   useEffect(() => {
-    fetchData(import.meta.env.VITE_SALES_TEAMS)
+    fetchData(import.meta.env.VITE_SALES_TEAMS, {}, setLoading, setError)
     .then((results)=>{
 
 
@@ -32,6 +33,7 @@ const TeamsPage = () => {
 
   }, [searchTerm, teams]);
 
+  
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
@@ -88,7 +90,10 @@ const TeamsPage = () => {
         </div>
 
         {/* Teams Grid */}
-        {
+        {  loading  ? (
+            <div className="p-6 text-center text-gray-500 dark:text-gray-400">Loading...</div>
+        ) 
+        :
             (filteredTeams && filteredTeams.length != 0) ? 
         <div
           className={`grid ${

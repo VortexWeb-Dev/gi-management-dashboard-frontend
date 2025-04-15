@@ -8,10 +8,11 @@ const AgentTransactionsTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [yearFilter, setYearFilter] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(true);
   // Load data on component mount
   useEffect(() => {
-    fetchData(import.meta.env.VITE_LAST_TRANSACTIONS)
+    fetchData(import.meta.env.VITE_LAST_TRANSACTIONS, {}, setLoading, setError )
       .then((data)=>{
         console.log(data)
         setData(data)
@@ -44,7 +45,7 @@ const AgentTransactionsTable = () => {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'AED',
       minimumFractionDigits: 0,
     }).format(amount);
   };
@@ -66,42 +67,11 @@ const AgentTransactionsTable = () => {
     return Array.from(years).sort();
   };
 
-  // Handle sorting
-//   const requestSort = (key) => {
-//     let direction = 'ascending';
-//     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-//       direction = 'descending';
-//     }
-//     setSortConfig({ key, direction });
-    
-//     const sortedData = [...filteredData].sort((a, b) => {
-//       if (key === 'agent' || key === 'project') {
-//         return direction === 'ascending' 
-//           ? a[key].localeCompare(b[key]) 
-//           : b[key].localeCompare(a[key]);
-//       } else if (key === 'lastDealDate' || key === 'joiningDate') {
-//         return direction === 'ascending' 
-//           ? new Date(a[key]) - new Date(b[key]) 
-//           : new Date(b[key]) - new Date(a[key]);
-//       } else {
-//         return direction === 'ascending' 
-//           ? a[key] - b[key] 
-//           : b[key] - a[key];
-//       }
-//     });
-    
-//     setFilteredData(sortedData);
-//   };
-
-  // Get sort indicator
-//   const getSortIndicator = (key) => {
-//     if (sortConfig.key !== key) return null;
-//     return (
-//       <span className="ml-1">
-//         {sortConfig.direction === 'ascending' ? '↑' : '↓'}
-//       </span>
-//     );
-//   };
+  if(loading || filteredData == null || filteredData.length ==0){
+    return <div className="text-4xl text-gray-600 py-8">
+    Loading...
+  </div>
+  }
 
   return (
     <div className="w-full p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -242,7 +212,7 @@ const AgentTransactionsTable = () => {
                     {item.joiningDate? formatDate(item.lastDealDate) : "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    {item.project}
+                    {item.project || "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     {formatCurrency(item.amount)}

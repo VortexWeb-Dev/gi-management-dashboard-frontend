@@ -10,6 +10,9 @@ import {
   Menu
 } from "lucide-react"; 
 
+import { useLocation } from "react-router-dom";
+
+
 const sidebarLinks = [
   {
     icon: <Gauge size={24} />,
@@ -38,11 +41,15 @@ const sidebarLinks = [
   },
 ];
 
-const SidebarItem = ({ icon, text, href, isOpen }) => {
+const SidebarItem = ({ icon, text, href, isOpen, isActive }) => {
   return (
     <a
       href={href}
-      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-700 rounded-lg transition-colors duration-200 group"
+      className={`flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-700 rounded-lg transition-colors duration-200 group
+      ${isActive
+        ? "bg-blue-100 text-blue-600 dark:bg-blue-700 dark:text-white"
+        : "text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-700"
+      }`}
     >
       <span className="flex items-center justify-center text-blue-600 dark:text-blue-400">
         {icon}
@@ -57,6 +64,8 @@ const SidebarItem = ({ icon, text, href, isOpen }) => {
 };
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+  const location = useLocation();
+  
   return (
     <div
       className={`bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${
@@ -97,6 +106,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             text={item.text}
             href={item.href}
             isOpen={isOpen}
+            isActive={location.pathname === item.href}
           />
         ))}
       </div>

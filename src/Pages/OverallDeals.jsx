@@ -133,7 +133,7 @@ const TransactionTable = () => {
   };
 
   
-  if (isLoading) {
+  if (isLoading || sortedTransactions.length == 0) {
     <div className='text-center text-4xl font-bold text-gray-700 dark:text-gray-200'>
               Loading....
             </div>
@@ -596,25 +596,25 @@ const TransactionTable = () => {
                     {new Date(transaction.date).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                    {transaction.developerName}
+                    {transaction.developerName || "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                    {transaction.dealType}
+                    {transaction.dealType || "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                    {transaction.propertyType}
+                    {transaction.propertyType || "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                     {transaction.noOfBr}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                    {transaction.projectName}
+                    {transaction.projectName || "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                    {transaction.unitNo}
+                    {transaction.unitNo || "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                    {transaction.clientName}
+                    {transaction.clientName || "Unavailable"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                     {transaction.agentName}
